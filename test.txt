@@ -1,0 +1,1 @@
+This is served by Go server.
