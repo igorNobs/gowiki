@@ -7,6 +7,8 @@ import (
 	"os"
 )
 
+var templates = template.Must(template.ParseFiles("./templates/edit.html", "./templates/view.html"))
+
 type Page struct {
 	Title string
 	Body  []byte
@@ -28,12 +30,7 @@ func loadPage(title string) (*Page, error) {
 }
 
 func renderTemplate(writer http.ResponseWriter, templateName string, p *Page) {
-	t, err := template.ParseFiles("./templates/" + templateName + ".html")
-	if err != nil {
-		http.Error(writer, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	err = t.Execute(writer, p)
+	err := templates.ExecuteTemplate(writer, templateName+".html", p)
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 	}
