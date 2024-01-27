@@ -13,12 +13,13 @@ type Page struct {
 }
 
 func (p *Page) save() error {
-	filename := p.Title + ".txt"
+	_ = os.Mkdir("documents", 0777)
+	filename := "./documents/" + p.Title + ".txt"
 	return os.WriteFile(filename, p.Body, 0600)
 }
 
 func loadPage(title string) (*Page, error) {
-	filename := title + ".txt"
+	filename := "./documents/" + title + ".txt"
 	body, err := os.ReadFile(filename)
 	if err != nil {
 		return nil, err
@@ -27,7 +28,7 @@ func loadPage(title string) (*Page, error) {
 }
 
 func renderTemplate(writer http.ResponseWriter, templateName string, p *Page) {
-	t, err := template.ParseFiles(templateName + ".html")
+	t, err := template.ParseFiles("./templates/" + templateName + ".html")
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
